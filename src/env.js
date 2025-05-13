@@ -11,9 +11,9 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    FUSIONAUTH_CLIENT_ID: z.string(),
-    FUSIONAUTH_CLIENT_SECRET: z.string(),
-    FUSIONAUTH_ISSUER: z.string(),
+    FUSIONAUTH_CLIENT_ID: z.any(),
+    FUSIONAUTH_CLIENT_SECRET: z.any(),
+    FUSIONAUTH_ISSUER: z.any(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])

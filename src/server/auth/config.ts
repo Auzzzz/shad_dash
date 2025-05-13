@@ -30,6 +30,7 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+
 export const authConfig = {
   providers: [
     FusionAuthProvider({
@@ -72,6 +73,7 @@ export const authConfig = {
   //TODO: check if FA session for site already exists
   // Customize JWT and session callbacks
   callbacks: {
+    
     async jwt({ token, user, account }: { token: any, user?: any, account?: any }) {
       // console.log("aatoken", account );
       // Add user information to the token on sign-in
@@ -169,6 +171,8 @@ async function refreshAccessToken(token: any) {
   }
     
   }
+
+  export { authConfig as GET, authConfig as POST };
 
   //TODO: add correct TS types to auth parseJwt
   //Take ID token from FusionAuth and parse it to get user information / cut to just user details no JWT
