@@ -14,6 +14,7 @@ export const env = createEnv({
     FUSIONAUTH_CLIENT_ID: z.any(),
     FUSIONAUTH_CLIENT_SECRET: z.any(),
     FUSIONAUTH_ISSUER: z.any(),
+    FUSIONAUTH_API: z.string(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -27,6 +28,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_FUSIONAUTH_URL: z.string().url(),
   },
 
   /**
@@ -38,8 +40,10 @@ export const env = createEnv({
     FUSIONAUTH_CLIENT_ID: process.env.FUSIONAUTH_CLIENT_ID,
     FUSIONAUTH_CLIENT_SECRET: process.env.FUSIONAUTH_CLIENT_SECRET,
     FUSIONAUTH_ISSUER: process.env.FUSIONAUTH_ISSUER,
+    FUSIONAUTH_API: process.env.FUSIONAUTH_API,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_FUSIONAUTH_URL: process.env.NEXT_PUBLIC_FUSIONAUTH_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
