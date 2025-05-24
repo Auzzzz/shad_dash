@@ -27,10 +27,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useSession } from "next-auth/react";
 
 
-export default function AccountUserInformation() {
+export default function AccountUserInformation({userData}) {
+
+    const { id, first_name, last_name, email } = userData;
 
 
   const formSchema = useForm<z.infer<typeof accountFormSchema>>({
