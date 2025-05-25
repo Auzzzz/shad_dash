@@ -41,33 +41,6 @@ export async function isTokenValid() {
   }
 }
 
-export async function getCurrentUser()
-
-// export default async function isLogged() {
-//   try {
-//     const session = await auth();
-
-//     if (!session) {
-//       return false;
-//     }
-
-//     if (session.jwt.accessTokenExpires * 1000 > Date.now()) {
-//       console.log("Session expired");
-//       redirect("/login");
-//       return false;
-//     }
-
-//     if (session.jwt.accessTokenExpires * 1000 > Date.now()) {
-//       return session.jwt.user.id;
-//     }
-//   } catch (error) {
-//     console.error("Error retrieving session:", error);
-//     return false;
-//   }
-
-//   return false;
-// }
-
 export async function getCurrentUser() {
   try {
     const session = await auth();

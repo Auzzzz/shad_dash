@@ -28,32 +28,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { type AccountFunctions, type UserData } from "~/app/account/page";
 
-export default function AccountUserInformation({userData}) {
+//TODO: create userData ts
+export default function AccountUserInformation({ userData, updateUser }: { userData: UserData, updateUser: AccountFunctions }) {
 
-    const { id, first_name, last_name, email } = userData;
+    const { id, first_name, last_name, email, verified, last_login, active, username, imageUrl } = userData;
+    
+    console.log(id, first_name, last_name, email)
 
+    // Set Date into readable format
+    const loginDate = new Date(last_login)
+    const displayDate = loginDate.toLocaleDateString("en-AU", {
+        weekday: "short",
+        year: "numeric",
+        month: "long",
+        day: "numeric",})
 
-  const formSchema = useForm<z.infer<typeof accountFormSchema>>({
-    resolver: zodResolver(accountFormSchema),
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-    },
-  });
-
+    // values for form items
   const form = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      first_name: first_name || "",
+      last_name: last_name || "",
+      email: email || "",
+      mobile_number: userData.mobile_number || "",
+      username: userData.username || "",
     },
   });
 
+  
+
   const onSubmit = (data: z.infer<typeof accountFormSchema>) => {
     console.log(data);
+    console.log("it works")
   };
 
+  const saveChanges = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = form.getValues();
+    console.log("Form Data:", formData);
+  }
+
+  //TODO: Two Factor Authentication
   return (
     <div className="flex h-full w-full justify-center border border-1 p-2 dark:border-gray-700">
       <div className="m-2 w-full">
@@ -61,11 +78,19 @@ export default function AccountUserInformation({userData}) {
           <h1 className="text-2xl font-bold">Account Settings</h1>
           <p className="text-sm text-gray-500">Manage your account settings</p>
           <div className="m-2 flex flex-row flex-wrap gap-2">
-            <Badge variant="secondary">User Active</Badge>
-            <Badge variant="secondary">Verified User</Badge>
+            { active ? (
+              <Badge variant="secondary">Active User</Badge>
+            ) : (
+              <Badge variant="destructive">Inactive User</Badge>
+            )}
+            { verified ? (
+              <Badge variant="secondary">Verified User</Badge>
+            ) : (
+              <Badge variant="destructive">Not Verified</Badge>
+            )}
             <Badge variant="secondary">Two Factor Enabled</Badge>
             <Badge variant="secondary">Awsome</Badge>
-            <Badge variant="secondary">Last Login: 10 July</Badge>
+            <Badge variant="secondary">Last Login: {displayDate}</Badge>
           </div>
         </div>
 
@@ -102,7 +127,7 @@ export default function AccountUserInformation({userData}) {
                 <FormItem_Input
                   className="p-2 md:w-full"
                   control={form.control}
-                  name="email_address"
+                  name="email"
                   label="Email Address"
                   type="text"
                   placeholder="JonnyD@email.com"
@@ -125,9 +150,9 @@ export default function AccountUserInformation({userData}) {
                   placeholder="0403 123 456"
                 />
               </div>
-
               <Button type="submit">Save</Button>
             </form>
+
           </Form>
         </div>
 

@@ -84,7 +84,7 @@ export const authConfig: NextAuthOptions = {
       session.user = token.user;
       session.accessToken = token.accessToken;
       session.error = token.error;
-
+      
       return session;
     },
   },
@@ -115,6 +115,7 @@ async function refreshAccessToken(token: any) {
     });
 
     const refreshedTokens = await response.json();
+    console.log("Refreshed tokens:", refreshedTokens);
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -125,6 +126,9 @@ async function refreshAccessToken(token: any) {
       accessToken: refreshedTokens.access_token,
       accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Use new refresh token if provided
+      user: {
+        id: refreshedTokens.userId
+      }
     };
   } catch (error) {
     console.error("Error refreshing access token:", error);
