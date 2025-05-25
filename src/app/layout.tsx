@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
+import toast, { Toaster } from 'react-hot-toast';
 
 import { AppSidebar } from "~/components/app-sidebar";
 import {
@@ -73,13 +74,8 @@ export default function RootLayout({
               </header>
               <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 {children}
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                  <div className="bg-muted/50 aspect-video rounded-xl" />
-                  <div className="bg-muted/50 aspect-video rounded-xl" />
-                  <div className="bg-muted/50 aspect-video rounded-xl" />
+                <Toaster />
                 </div>
-                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-              </div>
             </SidebarInset>
           </SidebarProvider>
         </AuthProvider>

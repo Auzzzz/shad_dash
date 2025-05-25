@@ -1,8 +1,10 @@
+"use server";
 import AccountUserInformation from "~/components/account/userInfomation";
 import { auth } from "~/server/auth";
-import { getCurrentUser, isTokenValid } from "~/server/server_lib/isLogged";
+import { isTokenValid } from "~/server/server_lib/isLogged";
 import { fusionClient } from "~/server/fusionClient";
-import type { UserRequest } from "@fusionauth/typescript-client";
+import type { UserData } from "~/lib/types/fusionAuth";
+
 
 async function getUserInformation(id: string) {
   try {
@@ -15,44 +17,55 @@ async function getUserInformation(id: string) {
   }
 }
 
-async function updateUser(id: string, updatedUserData: UserData) {
+async function updateUser(updatedUserData: UserData) {
+  "use server";
   try {
-    const user = await fusionClient.updateUser(id, {
+    // call FA to update user
+    const user = await fusionClient.updateUser(updatedUserData.id, {
       user: {
+        email: updatedUserData.email,
         firstName: updatedUserData.first_name,
-        lastName: updatedUserData.first_name,
-        mobilePhone: updatedUserData.first_name,
-        username: updatedUserData.first_name,
-        imageUrl: updatedUserData.first_name,
+        lastName: updatedUserData.last_name,
+        mobilePhone: updatedUserData.mobile_number,
+        username: updatedUserData.username,
+        imageUrl: updatedUserData.imageUrl,
       },
     });
     if (user.statusCode === 200) {
-      console.log("raw response", user);
-      return user.response.user;
+      return user.response
     }
   } catch (error) {
     console.error("Error retrieving user information:", error);
   }
 }
 
-export type UserData = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  verified: boolean;
-  last_login: number;
-  active: boolean;
-  mobile_number: string;
-  username: string;
-  imageUrl: string;
-};
-
-export type AccountFunctions = {
-  updateUser: () => void;
-}
-
 export default async function Page() {
+
+  // const updateUser = async (updatedUserData: UserData) => {
+  //   "use server";
+  //   try {
+  //     console.log("update function");
+  //     console.log("updatedUserData", updatedUserData);
+
+  //     const user = await fusionClient.updateUser(updatedUserData.id, {
+  //       user: {
+  //         email: updatedUserData.email,
+  //         firstName: updatedUserData.first_name,
+  //         lastName: updatedUserData.last_name,
+  //         mobilePhone: updatedUserData.mobile_number,
+  //         username: updatedUserData.username,
+  //         imageUrl: updatedUserData.imageUrl,
+  //       },
+  //     });
+  //     if (user.statusCode === 200) {
+  //       console.log("raw response", user);
+  //       return user.response.user;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error retrieving user information:", error);
+  //   }
+  // };
+
   // come back to this
   // isLogged()
 
@@ -75,6 +88,8 @@ export default async function Page() {
       username: userInfo!.username,
       imageUrl: userInfo!.imageUrl,
     } as UserData;
+
+    console.log(userInfo);
 
     return (
       <AccountUserInformation userData={userData} updateUser={updateUser} />
