@@ -28,7 +28,7 @@ export async function isTokenValid() {
     return true
 
   } catch (error) {
-    console.error("Error validating token:", error);
+    console.log("Error validating token:", error);
 
     if(error.statusCode === 401) {
       // User is not signed in

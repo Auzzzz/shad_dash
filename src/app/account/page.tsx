@@ -4,7 +4,8 @@ import { auth } from "~/server/auth";
 import { isTokenValid } from "~/server/server_lib/isLogged";
 import { fusionClient } from "~/server/fusionClient";
 import type { UserData } from "~/lib/types/fusionAuth";
-
+import toast from "react-hot-toast";
+import LoggedOut from "~/components/account/loggedout";
 
 async function getUserInformation(id: string) {
   try {
@@ -32,7 +33,7 @@ async function updateUser(updatedUserData: UserData) {
       },
     });
     if (user.statusCode === 200) {
-      return user.response
+      return user.response;
     }
   } catch (error) {
     console.error("Error retrieving user information:", error);
@@ -40,40 +41,12 @@ async function updateUser(updatedUserData: UserData) {
 }
 
 export default async function Page() {
-
-  // const updateUser = async (updatedUserData: UserData) => {
-  //   "use server";
-  //   try {
-  //     console.log("update function");
-  //     console.log("updatedUserData", updatedUserData);
-
-  //     const user = await fusionClient.updateUser(updatedUserData.id, {
-  //       user: {
-  //         email: updatedUserData.email,
-  //         firstName: updatedUserData.first_name,
-  //         lastName: updatedUserData.last_name,
-  //         mobilePhone: updatedUserData.mobile_number,
-  //         username: updatedUserData.username,
-  //         imageUrl: updatedUserData.imageUrl,
-  //       },
-  //     });
-  //     if (user.statusCode === 200) {
-  //       console.log("raw response", user);
-  //       return user.response.user;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error retrieving user information:", error);
-  //   }
-  // };
-
-  // come back to this
-  // isLogged()
-
   const yes = await isTokenValid();
   console.log("yes", yes);
 
   const session = await auth();
   const userInfo = await getUserInformation(session?.user?.id || "");
+  console.log(userInfo)
 
   if (session?.user?.id === userInfo?.id) {
     const userData = {
@@ -89,16 +62,14 @@ export default async function Page() {
       imageUrl: userInfo!.imageUrl,
     } as UserData;
 
-    console.log(userInfo);
 
     return (
       <AccountUserInformation userData={userData} updateUser={updateUser} />
+
     );
   } else {
     console.log("User info not matching");
-    console.log("Session user ID:", session?.user);
-    console.log("User info ID:", userInfo?.id);
     // TODO: create error page
-    return false;
+    return <LoggedOut />;
   }
 }

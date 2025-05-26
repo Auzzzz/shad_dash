@@ -1,11 +1,11 @@
 "use client"
 import Link from "next/link";
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { UploadButton } from "~/lib/uploadthing";
 
 
 
-
-export default async function HomePage() {
+export default function HomePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -37,6 +37,18 @@ export default async function HomePage() {
             </div>
           </Link>
         </div>
+        {/* <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      /> */}
       </div>
       <button onClick={() => signIn('fusionauth')}> Logon </button>
       <button onClick={() => signOut()}> Logoff </button>
