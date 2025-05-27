@@ -5,6 +5,7 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  LogIn,
   LogOut,
   Sparkles,
 } from "lucide-react";
@@ -111,12 +112,14 @@ export function NavUser({ userData }: { userData: FusionAuthUser | null }) {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
-                
+                <LogOut />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
+          <SidebarMenuItem>
+            
           <Button
             variant="outline"
             className="w-full"
@@ -124,10 +127,11 @@ export function NavUser({ userData }: { userData: FusionAuthUser | null }) {
               signIn("fusionauth", { callbackUrl: "/" });
             }}
           >
-            {" "}
-            Log in{" "}
+            <LogIn /> Log in
           </Button>
+          </SidebarMenuItem>
         )}
+
       </SidebarMenuItem>
     </SidebarMenu>
   );

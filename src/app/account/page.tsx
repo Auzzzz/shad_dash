@@ -4,7 +4,6 @@ import { auth } from "~/server/auth";
 import { isTokenValid } from "~/server/server_lib/isLogged";
 import { fusionClient } from "~/server/fusionClient";
 import type { UserData } from "~/lib/types/fusionAuth";
-import toast from "react-hot-toast";
 import LoggedOut from "~/components/account/loggedout";
 
 async function getUserInformation(id: string) {

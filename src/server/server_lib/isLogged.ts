@@ -1,11 +1,6 @@
-import { boolean } from "zod";
-import { auth, signOut } from "../auth";
-import { Session } from "node:inspector/promises";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { sign } from "node:crypto";
+import { auth } from "../auth";
 import { fusionClient } from "../fusionClient";
-import LoggedOut from "~/components/account/loggedout";
+
 
 // Check if the JWT is valid by checking with FA
 //TODO: add TS to session

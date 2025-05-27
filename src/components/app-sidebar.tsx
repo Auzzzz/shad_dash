@@ -25,9 +25,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar"
-import { useSession } from "next-auth/react"
-import { getUserInformation, isTokenValid } from "~/server/server_lib/isLogged"
-import type { Session } from "next-auth"
+
 import type { FusionAuthUser } from "~/lib/types/fusionAuth"
 
 
@@ -166,10 +164,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ userData, ...props }: AppSidebarProps) {
-  
-  // use session.user.id to get the user information from fusionAuth from getUserInformation
 
-
+  //TODO: add in teams if needed from FA data
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
