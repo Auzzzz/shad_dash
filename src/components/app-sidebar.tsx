@@ -25,13 +25,18 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar"
+import { useSession } from "next-auth/react"
+import { getUserInformation, isTokenValid } from "~/server/server_lib/isLogged"
+import type { Session } from "next-auth"
+import type { FusionAuthUser } from "~/lib/types/fusionAuth"
+
 
 // This is sample data.
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "",
+    avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
@@ -156,7 +161,15 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  userData: FusionAuthUser | null; // Replace 'any' with the appropriate type for session if known
+}
+
+export function AppSidebar({ userData, ...props }: AppSidebarProps) {
+  
+  // use session.user.id to get the user information from fusionAuth from getUserInformation
+
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -167,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser userData={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

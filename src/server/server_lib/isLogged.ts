@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { sign } from "node:crypto";
 import { fusionClient } from "../fusionClient";
+import LoggedOut from "~/components/account/loggedout";
 
 // Check if the JWT is valid by checking with FA
 //TODO: add TS to session
@@ -21,18 +22,17 @@ export async function isTokenValid() {
         console.log("Token is not valid");
         return false;
       }
-      return true
+      return true;
     });
-    
-    // If we reach here, the token is valid
-    return true
 
+    // If we reach here, the token is valid
+    return true;
   } catch (error) {
     console.log("Error validating token:", error);
 
-    if(error.statusCode === 401) {
+    if (error.statusCode === 401) {
       // User is not signed in
-      console.log("401")
+      console.log("401");
       return false;
     }
 
@@ -41,52 +41,18 @@ export async function isTokenValid() {
   }
 }
 
-export async function getCurrentUser() {
+export async function getUserInformation(id: string) {
   try {
-    const session = await auth();
+    const user = await fusionClient.retrieveUser(id);
 
-    if (!session) {
-      return { error: "No session found", bool: false };
+    if (user.statusCode === 200) {
+      return { user: user.response.user };
     } else {
-      return { bool: true, user: session.user.id };
-    }
-  } catch (error) {
-    console.error("Error retrieving user information:", error);
-    signOut({ redirectTo: "/login" });
-    return { error: "Error retrieving user information", bool: false };
-  }
-}
-
-export async function thisone() {
-  // check the access token is not expired
-  const session = await auth();
-  if (!session) {
-    return false;
-  }
-  if (session.jwt && session.jwt.accessTokenExpires) {
-    const exp = new Date(session.jwt.accessTokenExpires * 1000);
-    if (exp < new Date()) {
-      console.log("Session expired");
-      signOut({ redirectTo: "/login" });
+      console.error("Error retrieving user information:", user.statusCode);
       return false;
     }
-  } else {
-    console.log("No Session");
-    return false;
-  }
-}
-
-export async function temp() {
-  const session = await auth();
-
-  try {
-    if (!session) {
-      return { error: "No session found", bool: false };
-    } else {
-      return { bool: true, user: session };
-    }
   } catch (error) {
+
     console.error("Error retrieving user information:", error);
-    return { error: "Error retrieving user information", bool: false };
   }
 }

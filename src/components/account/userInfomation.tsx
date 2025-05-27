@@ -67,6 +67,7 @@ export default function AccountUserInformation({
   });
 
   // values for form items
+  //TODO: proper check of phone number
   const form = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
@@ -107,6 +108,8 @@ export default function AccountUserInformation({
       })
       .catch((error) => {
         console.error("Error updating user:", error);
+        console.log("error 1", error);
+        if( error.statusCode === 400 && error.exception === "InvalidParameter") {}
         toast.error("An error occurred when updating user", {position: "bottom-center"});
 
         setDisabled(false);

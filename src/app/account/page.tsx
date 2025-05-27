@@ -10,6 +10,7 @@ import LoggedOut from "~/components/account/loggedout";
 async function getUserInformation(id: string) {
   try {
     const user = await fusionClient.retrieveUser(id);
+    console.log("user1", user);
     if (user.statusCode === 200) {
       return user.response.user;
     }
@@ -46,7 +47,6 @@ export default async function Page() {
 
   const session = await auth();
   const userInfo = await getUserInformation(session?.user?.id || "");
-  console.log(userInfo)
 
   if (session?.user?.id === userInfo?.id) {
     const userData = {
