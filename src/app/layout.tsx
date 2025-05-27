@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 import { AppSidebar } from "~/components/app-sidebar";
 import {
@@ -21,7 +21,7 @@ import {
 import AuthProvider from "~/lib/providers/auth-provider";
 import { auth } from "~/server/auth";
 import { getUserInformation } from "~/server/server_lib/isLogged";
-
+import NextBreadcrumb from "~/components/root/breadcrums";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,25 +43,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const session = await auth();
   var userData;
   if (session?.user?.id) {
     const user = await getUserInformation(session.user.id);
-    userData = user
+    userData = user;
   } else {
-    userData = null
+    userData = null;
   }
 
   return (
-
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
           <SidebarProvider>
-            <AppSidebar userData={userData}/>
+            <AppSidebar userData={userData} />
             <SidebarInset>
               <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                 <div className="flex items-center gap-2 px-4">
@@ -70,25 +68,21 @@ export default async function RootLayout({
                     orientation="vertical"
                     className="mr-2 data-[orientation=vertical]:h-4"
                   />
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem className="hidden md:block">
-                        <BreadcrumbLink href="#">
-                          Building Your Application
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
+                  
+                  <NextBreadcrumb
+                    homeElement={"Home"}
+                    separator={<span> | </span>}
+                    activeClasses="text-amber-500"
+                    containerClasses="flex py-5 bg-gradient-to-r from-purple-600 to-blue-600"
+                    listClasses="hover:underline mx-2 font-bold"
+                    capitalizeLinks
+                  />
                 </div>
               </header>
               <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 {children}
                 <Toaster />
-                </div>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </AuthProvider>
