@@ -10,7 +10,7 @@ export async function isTokenValid() {
     if (!session) {
       return false;
     }
-
+    
     await fusionClient.validateJWT(session.accessToken).then((check) => {
       console.log("check", check);
       if (check.statusCode !== 200) {
@@ -47,7 +47,7 @@ export async function getUserInformation(id: string) {
       return false;
     }
   } catch (error) {
-
     console.error("Error retrieving user information:", error);
+    return false
   }
 }
