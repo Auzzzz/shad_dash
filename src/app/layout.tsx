@@ -4,14 +4,7 @@ import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
 
 import { AppSidebar } from "~/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb";
+
 import { Separator } from "~/components/ui/separator";
 import {
   SidebarInset,
@@ -22,7 +15,6 @@ import AuthProvider from "~/lib/providers/auth-provider";
 import { auth } from "~/server/auth";
 import { getUserInformation } from "~/server/server_lib/isLogged";
 import NextBreadcrumb from "~/components/root/breadcrums";
-import type { FusionAuthUser } from "~/lib/types/fusionAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,18 +37,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  var userData;
+  let userData;
   if (session?.user?.id) {
     const user = await getUserInformation(session.user.id);
     userData = user;
   } else {
     userData = null;
   }
-
-  const test = await auth();
-  console.log(test)
-
-  console.log("userData in layout", userData);
 
   return (
     <html lang="en">

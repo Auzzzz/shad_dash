@@ -97,7 +97,6 @@ async function refreshAccessToken(token: any) {
     });
 
     const refreshedTokens = await response.json();
-    console.log("Refreshed tokens:", refreshedTokens);
 
     if (!response.ok) {
       throw refreshedTokens;

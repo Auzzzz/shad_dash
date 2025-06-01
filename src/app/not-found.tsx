@@ -15,7 +15,7 @@ export default function NotFound() {
             Oops! We Think You are Lost
           </h1>
           <p className="text-gray-500">
-            Looks like you've ventured into a dream (404).
+            Looks like you have ventured into a dream (404).
           </p>
         </div>
         <Link

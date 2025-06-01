@@ -5,14 +5,11 @@ import { isTokenValid } from "~/server/server_lib/isLogged";
 import { fusionClient } from "~/server/fusionClient";
 import type { UserData } from "~/lib/types/fusionAuth";
 import LoggedOut from "~/components/account/loggedout";
-import { Sign } from "crypto";
 import { redirect } from "next/navigation";
-import toast from "react-hot-toast";
 
 async function getUserInformation(id: string) {
   try {
     const user = await fusionClient.retrieveUser(id);
-    console.log("user1", user);
     if (user.statusCode === 200) {
       return user.response.user;
     }
@@ -47,10 +44,9 @@ async function updateUser(updatedUserData: UserData) {
 export default async function Page() {
   const valid = await isTokenValid();
   const session = await auth();
-  const userInfo = await getUserInformation(session?.user?.id || "");
+  const userInfo = await getUserInformation(session?.user?.id ?? "");
 
   if (!valid) {
-    console.log("Token is not valid, redirecting to login");
     redirect("/login");
   }
   if( userInfo === false) { redirect("/")}
@@ -75,7 +71,7 @@ export default async function Page() {
 
     );
   } else {
-    console.log("User info not matching");
+    console.error("User info not matching", session?.user?.id, userInfo?.id);
     // TODO: create error page
     return <LoggedOut />;
   }

@@ -13,14 +13,14 @@ export async function isTokenValid() {
     }
     
     if (!session.accessToken) {
-      console.log("No access token found in session");
+      // console.log("No access token found in session");
       return false;
     }
 
     await fusionClient.validateJWT(session.accessToken).then((check) => {
-      console.log("check", check);
+      // console.log("check", check);
       if (check.statusCode !== 200) {
-        console.log("Token is not valid");
+        // console.log("Token is not valid");
         return false;
       }
       return true;
@@ -29,15 +29,14 @@ export async function isTokenValid() {
     // If we reach here, the token is valid
     return true;
   } catch (error) {
-    console.log("Error validating token:", error);
-
+    // console.log("Error validating token:", error);
+    //ts-ignore-next-line
     if (typeof error === "object" && error !== null && "statusCode" in error && (error as any).statusCode === 401) {
       // User is not signed in
-      console.log("401");
+      // console.log("401");
       return false;
     }
 
-    console.log("Session error", error);
     return false;
   }
 }
