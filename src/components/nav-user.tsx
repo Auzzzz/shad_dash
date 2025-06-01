@@ -28,7 +28,7 @@ import {
 } from "~/components/ui/sidebar";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
-export function NavUser({ userData }: { userData: FusionAuthUser | null }) {
+export function NavUser({ userData }: { userData: FusionAuthUser | false | null }) {
   const { isMobile } = useSidebar();
 
   return (

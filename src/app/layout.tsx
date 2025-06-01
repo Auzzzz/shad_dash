@@ -22,6 +22,7 @@ import AuthProvider from "~/lib/providers/auth-provider";
 import { auth } from "~/server/auth";
 import { getUserInformation } from "~/server/server_lib/isLogged";
 import NextBreadcrumb from "~/components/root/breadcrums";
+import type { FusionAuthUser } from "~/lib/types/fusionAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,11 @@ export default async function RootLayout({
   } else {
     userData = null;
   }
+
+  const test = await auth();
+  console.log(test)
+
+  console.log("userData in layout", userData);
 
   return (
     <html lang="en">

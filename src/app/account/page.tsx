@@ -46,15 +46,13 @@ async function updateUser(updatedUserData: UserData) {
 
 export default async function Page() {
   const valid = await isTokenValid();
+  const session = await auth();
+  const userInfo = await getUserInformation(session?.user?.id || "");
 
   if (!valid) {
     console.log("Token is not valid, redirecting to login");
     redirect("/login");
   }
-
-  const session = await auth();
-  const userInfo = await getUserInformation(session?.user?.id || "");
-
   if( userInfo === false) { redirect("/")}
 
   if (session?.user?.id === userInfo?.id) {

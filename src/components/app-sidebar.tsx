@@ -160,7 +160,7 @@ const data = {
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  userData: FusionAuthUser | null; // Replace 'any' with the appropriate type for session if known
+  userData: FusionAuthUser | false | null; // Replace 'any' with the appropriate type for session if known
 }
 
 export function AppSidebar({ userData, ...props }: AppSidebarProps) {

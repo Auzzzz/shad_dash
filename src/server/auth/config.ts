@@ -1,40 +1,15 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 // import FusionAuthProvider from "next-auth/providers/fusionauth";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
+
 import FusionAuthProvider from "next-auth/providers/fusionauth";
 
 import { db } from "~/server/db";
 
 //TODO: Type safety
 
-interface FusionAuthJWT extends Record<string, unknown> {
-  accessToken?: string;
-  accessTokenExpires?: number;
-  refreshToken?: string;
-  user?: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    roles?: string[];
-  };
-  error?: "RefreshAccessTokenError";
-}
-
-interface FusionAuthSession {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    roles?: string[];
-  };
-  accessToken?: string;
-  error?: "RefreshAccessTokenError";
-}
-
-export const authConfig: NextAuthOptions = {
+export const authConfig: NextAuthConfig = {
   providers: [
     FusionAuthProvider({
       clientId: process.env.FUSIONAUTH_CLIENT_ID!,
@@ -58,7 +33,15 @@ export const authConfig: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({
+      token,
+      user,
+      account,
+    }: {
+      token: any;
+      user?: any;
+      account?: any;
+    }) {
       // If signing in, add user and account info to the token
       if (account && user) {
         return {
@@ -69,17 +52,16 @@ export const authConfig: NextAuthOptions = {
         };
       }
       // If the token is still valid, return it
+      // TODO: Come back to this as RefreshToken provides correct data =| over initial token
       if (Date.now() < token.accessTokenExpires) {
         return token;
       }
-
-      console.log("Token expired, refreshing...");
 
       // If the token has expired, refresh it
       return await refreshAccessToken(token);
     },
 
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       // Add token and user info to the session
       session.user = token.user;
       session.accessToken = token.accessToken;
