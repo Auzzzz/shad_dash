@@ -6,6 +6,7 @@ import { fusionClient } from "~/server/fusionClient";
 import type { UserData } from "~/lib/types/fusionAuth";
 import LoggedOut from "~/components/account/loggedout";
 import { redirect } from "next/navigation";
+import type { accountUpdateUser } from "~/lib/types/types_account";
 
 async function getUserInformation(id: string) {
   try {
@@ -19,7 +20,7 @@ async function getUserInformation(id: string) {
   }
 }
 
-async function updateUser(updatedUserData: UserData) {
+async function updateUser(updatedUserData: accountUpdateUser) {
   "use server";
   try {
     // call FA to update user
@@ -34,7 +35,16 @@ async function updateUser(updatedUserData: UserData) {
       },
     });
     if (user.statusCode === 200) {
-      return user.response;
+      const updatedUserData: accountUpdateUser = {
+        id: user.response.user!.id!,
+        first_name: user.response.user!.firstName!,
+        last_name: user.response.user!.lastName!,
+        email: user.response.user!.email!,
+        mobile_number: user.response.user!.mobilePhone!,
+        username: user.response.user!.username!,
+        imageUrl: user.response.user!.imageUrl!,
+      };
+      return updatedUserData;
     }
   } catch (error) {
     console.error("Error retrieving user information:", error);

@@ -9,7 +9,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
-import { type FusionAuthUser, type UserData } from "~/lib/types/fusionAuth";
+import { type FusionAuthUser } from "~/lib/types/fusionAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ import {
 } from "~/components/ui/sidebar";
 import { Button } from "./ui/button";
 import { signIn, signOut } from "next-auth/react";
+import toast from "react-hot-toast";
 export function NavUser({ userData }: { userData: FusionAuthUser | false | null }) {
   const { isMobile } = useSidebar();
 
@@ -123,8 +124,10 @@ export function NavUser({ userData }: { userData: FusionAuthUser | false | null 
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => {
-              signIn("fusionauth", { callbackUrl: "/" });
+            onClick={async () => {
+              await signIn("fusionauth", { callbackUrl: "/" }).catch(() => {    
+                toast.error("An error occurred while logging out. Please try again.");
+            })
             }}
           >
             <LogIn /> Log in

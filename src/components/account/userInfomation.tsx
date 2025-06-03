@@ -28,23 +28,23 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm, type Control, type FieldValues } from "react-hook-form";
+import { type z } from "zod";
 
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import type { UserData } from "~/lib/types/fusionAuth";
 import toast from "react-hot-toast";
+import type { accountUpdateUser } from "~/lib/types/types_account";
 
-//TODO: create userData ts
+
 export default function AccountUserInformation({
   userData,
   updateUser,
 }: {
   userData: UserData;
-  updateUser: (data: any) => Promise<any>;
-}) {
-  var {
+  updateUser: (data: accountUpdateUser) => Promise<accountUpdateUser | undefined>}) {
+  const {
     id,
     first_name,
     last_name,
@@ -81,7 +81,7 @@ export default function AccountUserInformation({
   });
   const [disabled, setDisabled] = useState(false);
   // Take the values from the forms submit to updateUser from parent then update userdata with response
-  const onSubmit = async (data: z.infer<typeof accountFormSchema>) => {    
+  const onSubmit = async () => {    
     setDisabled(true);
     const formData = form.getValues();
     updateUser({
@@ -96,10 +96,10 @@ export default function AccountUserInformation({
       .then((response) => {
         userData = {
           ...userData,
-          first_name: response.user.firstName,
-          last_name: response.user.lastName,
-          username: response.user.username,
-          mobile_number: response.user.mobilePhone,
+          first_name: response?.first_name ?? userData.first_name,
+          last_name: response?.last_name ?? userData.last_name,
+          username: response?.username ?? userData.username,
+          mobile_number: response?.mobile_number ?? userData.mobile_number,
         };
 
         toast.success("User has been updated", {position: "bottom-center"});
@@ -108,8 +108,6 @@ export default function AccountUserInformation({
       })
       .catch((error) => {
         console.error("Error updating user:", error);
-        console.log("error 1", error);
-        if( error.statusCode === 400 && error.exception === "InvalidParameter") {}
         toast.error("An error occurred when updating user", {position: "bottom-center"});
 
         setDisabled(false);
@@ -148,7 +146,7 @@ export default function AccountUserInformation({
               <div className="flex flex-row p-2">
                 <FormItem_Input
                   className="p-2 md:w-full lg:w-1/2"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="username"
                   label="Usermame"
                   type="text"
@@ -172,7 +170,7 @@ export default function AccountUserInformation({
                         <DialogTitle>Change Avatar</DialogTitle>
                         <DialogDescription>
                           Upload your new avatar image here. Click save when
-                          you're done.
+                          you are done.
                         </DialogDescription>
                       </DialogHeader>
 
@@ -182,7 +180,7 @@ export default function AccountUserInformation({
                         </Label>
                         <FormItem_Input
                           className="col-span-3"
-                          control={form.control}
+                          control={form.control as unknown as Control<FieldValues>}
                           name="imageUrl"
                           type="url"
                           placeholder="https://example.com/avatar.jpg"
@@ -205,7 +203,7 @@ export default function AccountUserInformation({
               <div className="flex flex-wrap">
                 <FormItem_Input
                   className="p-2 md:w-full lg:w-1/2"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="first_name"
                   label="First Name"
                   type="text"
@@ -214,7 +212,7 @@ export default function AccountUserInformation({
                 />
                 <FormItem_Input
                   className="p-2 md:w-full lg:w-1/2"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="last_name"
                   label="Last Name"
                   type="text"
@@ -223,7 +221,7 @@ export default function AccountUserInformation({
                 />
                 <FormItem_Input
                   className="p-2 md:w-full"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="email"
                   label="Email Address"
                   type="text"
@@ -232,7 +230,7 @@ export default function AccountUserInformation({
                 />
                 <FormItem_Input
                   className="p-2 md:w-full lg:w-1/2"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="phone_number"
                   label="Phone Number"
                   type="phone"
@@ -241,7 +239,7 @@ export default function AccountUserInformation({
                 />
                 <FormItem_Input
                   className="p-2 md:w-full lg:w-1/2"
-                  control={form.control}
+                  control={form.control as unknown as Control<FieldValues>}
                   name="mobile_number"
                   label="Mobile Number"
                   type="phone"

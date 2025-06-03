@@ -35,16 +35,15 @@ const NextBreadcrumb = ({
           <BreadcrumbLink href="/">{homeElement}</BreadcrumbLink>
         </BreadcrumbItem>
         {pathNames.map((link, index) => {
-          let href = `/${pathNames.slice(0, index + 1).join("/")}`;
-          let itemClasses =
-            paths === href ? `${listClasses} ${activeClasses}` : listClasses;
-          let itemLink = capitalizeLinks
+          const href = `/${pathNames.slice(0, index + 1).join("/")}`;
+          const itemClasses = paths === href ? `${listClasses} ${activeClasses}` : listClasses;
+          const itemLink = capitalizeLinks
             ? link[0]?.toUpperCase() + link.slice(1, link.length)
             : link;
           return (
             <React.Fragment key={index}>
               <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
+              <BreadcrumbItem className={itemClasses}>
                 <BreadcrumbLink href={href}>{itemLink}</BreadcrumbLink>
               </BreadcrumbItem>
             </React.Fragment>

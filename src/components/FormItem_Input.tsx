@@ -1,5 +1,5 @@
+import type { Control } from "react-hook-form";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -10,7 +10,7 @@ import {
 import { Input } from "~/components/ui/input";
 
 interface FormItemInputProps {
-  control: any;
+  control: Control
   name: string;
   label?: string;
   placeholder: string;

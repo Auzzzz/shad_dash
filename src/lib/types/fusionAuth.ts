@@ -16,7 +16,7 @@ export type FusionAuthUser = {
   user: {
     active: boolean;
     connectorId: string;
-    data: {};
+    data: object;
     email: string;
     encryptionScheme: string;
     factor: number;
@@ -35,7 +35,7 @@ export type FusionAuthUser = {
     registration: [
       {
         applicationId: string;
-        data: {};
+        data: object;
         id: string;
         insertInstant: number;
         lastUpdateInstant: number;
