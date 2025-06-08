@@ -1,3 +1,5 @@
+import type { JWT } from "@fusionauth/typescript-client";
+
 export type UserData = {
   id: string;
   first_name: string;
@@ -55,3 +57,69 @@ export type FusionAuthUser = {
     verifiedInstant: number;
   };
 };
+
+export type configJWT = JWT & {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpires: number;
+  user: {
+    id: string;
+  };
+  iat: number;
+  exp: number;
+  jti: string;
+};
+
+export type configAccount = {
+  access_token: string;
+  refresh_token: string;
+  expires_at: number;
+}
+
+export type configSession = {
+  user: { id: string},
+  expires: string;
+  accessToken: string;
+  accessTokenExpires: number;
+  error: string;
+}
+
+// New
+
+export type jwtToken = {
+  name?: string;
+    email?: string;
+    picture?: string;
+    sub?: string;
+}
+
+export type jwtUser = {
+    id?: string;
+    email?: string;
+    name?: string;
+}
+
+export type jwtAccount = {
+  access_token: string;
+    expires_in: number
+    id_token: string;
+    refresh_token: string;
+    refresh_token_id: string;
+    scope: string;
+    token_type: string;
+    userId: string;
+    expires_at: number;
+    provider: string;
+    type: string;
+    providerAccountId: string;
+}
+
+export type jwtProfile = {
+  sub: string;
+  tid: string;
+}
+
+export type jwtReturn = {
+  token: jwtToken;
+  account: jwtAccount
+}

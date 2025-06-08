@@ -1,13 +1,30 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+
+import { type Account, type DefaultSession, type NextAuthConfig, type Session, type User } from "next-auth";
 // import FusionAuthProvider from "next-auth/providers/fusionauth";
 import NextAuth from "next-auth";
 
 import FusionAuthProvider from "next-auth/providers/fusionauth";
 
-import { db } from "~/server/db";
+
+
 
 //TODO: Type safety
+import { type JWT } from "next-auth/jwt";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      image?: string | null;
+      email?: string | null;
+    } & DefaultSession["user"];
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpires: number;
+  }
+
+
+}
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -38,9 +55,9 @@ export const authConfig: NextAuthConfig = {
       user,
       account,
     }: {
-      token: any;
-      user?: any;
-      account?: any;
+      token: JWT;
+      user?: User ;
+      account?: Account | null;
     }) {
       // If signing in, add user and account info to the token
       if (account && user) {
@@ -53,7 +70,7 @@ export const authConfig: NextAuthConfig = {
       }
       // If the token is still valid, return it
       // TODO: Come back to this as RefreshToken provides correct data =| over initial token
-      if (Date.now() < token.accessTokenExpires) {
+      if (account && Date.now() < account.expires_at!) {
         return token;
       }
 
@@ -61,11 +78,12 @@ export const authConfig: NextAuthConfig = {
       return await refreshAccessToken(token);
     },
 
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       // Add token and user info to the session
-      session.user = token.user;
-      session.accessToken = token.accessToken;
-      session.error = token.error;
+      session.user = token.user as Session["user"];
+      session.accessToken = token.accessToken as string;
+
+        console.log("session token", token);
       
       return session;
     },
@@ -79,7 +97,7 @@ export const authConfig: NextAuthConfig = {
 };
 
 // Function to refresh the access token
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) {
   try {
     const url = `${process.env.FUSIONAUTH_ISSUER}/oauth2/token`;
 
@@ -92,11 +110,11 @@ async function refreshAccessToken(token: any) {
         client_id: process.env.FUSIONAUTH_CLIENT_ID!,
         client_secret: process.env.FUSIONAUTH_CLIENT_SECRET!,
         grant_type: "refresh_token",
-        refresh_token: token.refreshToken,
+        refresh_token: token.refreshToken as string,
       }),
     });
 
-    const refreshedTokens = await response.json();
+    const refreshedTokens = await response.json() 
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -122,27 +140,3 @@ async function refreshAccessToken(token: any) {
 }
 
 export default NextAuth(authConfig);
-
-
-// Define types for JWT, Session, and Profile
-interface JWT {
-  id?: string;
-  email?: string;
-}
-
-interface Session {
-  user: {
-    id?: string;
-    email?: string;
-  };
-  expires: string; // Add the required 'expires' property
-}
-
-interface Profile {
-  sub: string;
-  name?: string;
-  preferred_username?: string;
-  email: string;
-  picture?: string;
-}
-
