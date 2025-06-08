@@ -50,6 +50,7 @@ export const authConfig: NextAuthConfig = {
   },
 
   callbacks: {
+
     async jwt({
       token,
       user,
@@ -67,15 +68,19 @@ export const authConfig: NextAuthConfig = {
           accessTokenExpires: account.expires_at!,
           user,
         };
+      } else {
+        console.error("No account or user found in JWT callback", { account, user });
       }
       // If the token is still valid, return it
       // TODO: Come back to this as RefreshToken provides correct data =| over initial token
       if (account && Date.now() < account.expires_at!) {
         return token;
-      }
+      } 
 
       // If the token has expired, refresh it
       return await refreshAccessToken(token);
+
+    
     },
 
     async session({ session, token }: { session: Session; token: JWT }) {
